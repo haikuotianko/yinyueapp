@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="shortcut icon" href="./icons/favicon.ico" type="image/x-icon" />
+		<title>哎音乐</title>
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/index.css" />
+	</head>
+	<body>
+		<!-- 背景图 -->
+		<div class="bac"></div>
+		<!-- box -->
+		<div class="box">
+			<!-- 手机任务栏预留空间 -->
+			<div class="Android_task"></div>
+			<!-- 头部 -->
+			<header class="clearfix head">
+				<!-- 个人中心 -->
+				<div class="Personal fl "><img class="img-auto" src="icons/personal.png" /></div>
+				<!-- 搜索框 -->
+				<div class="search fl">
+					<div class="Magnifier clearfix">
+						<i><img class="img-auto" src="icons/Magnifier.png" ></i>
+						<span>搜索歌名或歌手</span>
+					</div>
+					<input class="Seek" type="text" name="" value="" />
+				</div>
+			</header>
+			<!-- 头部 end-->
+			<!-- 导航 -->
+			<nav class="nav">
+				
+				<ul class="clearfix">
+					<li>
+						<div class="nav_img"><img class="img-auto" src="icons/music.png" /></div>
+						<div class="nav_text">今日推歌</div>
+					</li>
+					<li>
+						<div class="nav_img"><img class="img-auto" src="icons/Collection.png" /></div>
+						<div class="nav_text">热门歌单</div>
+					</li>
+					<li>
+						<div class="nav_img"><img class="img-auto" src="icons/station.png" /></div>
+						<div class="nav_text">电台</div>
+					</li>
+					<li>
+						<div class="nav_img"><img class="img-auto" src="icons/video.png" /></div>
+						<div class="nav_text">MV</div>
+					</li>
+					<li>
+						<div class="nav_img"><img class="img-auto" src="icons/classification.png" /></div>
+						<div class="nav_text">今日推歌</div>
+					</li>
+				</ul>
+				
+			</nav>
+			
+			<!-- 导航 end-->
+			
+			<!-- 今日首推 -->
+			<div class="first">
+				<!-- 专辑 -->
+				<div class="Album">
+					<div class="fi_text">最新专辑</div>
+					<ul class="clearfix">
+						
+						<!-- <li>
+							<div class="ab_box">
+								<div class="ab_singer one-text">华晨宇</div>
+								<div class="ab_ba">
+									<img class="img-auto" src="./images/Album.png" >
+									<div class="ab_img">
+										<img class="img-auto" src="http://p3.music.126.net/AFmJAcW7jFamQBNF68iKgw==/109951164452907718.jpg" >
+									</div>
+								</div>
+								<div class="ab_name one-text">与火星的孩子对话</div>
+							</div>
+						</li> -->
+					</ul>
+				</div>
+				<!-- 专辑 end-->
+				<!-- 歌单 -->
+				<div class="songSheet">
+					<div class="fi_text">推荐歌单</div>
+					<ul class="clearfix">
+						<!-- <li>
+							<div class="ss-box">
+								<div class="ss-ba img-Load">
+									<div class="people">
+										<div class="people-text">
+											100万
+										</div>
+									</div>
+								</div>
+								<div class="ss-text two-text">
+									伤心太平洋
+								</div>
+							</div>
+						</li> -->
+						
+					</ul>
+				</div>
+				<!-- 歌单 end-->
+				
+			</div>
+			<!-- 今日首推 end-->
+			
+			<!-- 音乐播放器（小） -->
+			<div class="minPlayer clearfix">
+				<div class="Loading">
+					正在拼命加载中...
+				</div>
+				<div class="mp_img fl active">
+					<span><img class="img-auto" src="./icons/music.png" ></span>
+				</div>
+				<div class="Song fl">
+					<div class="Song_name one-text">来自天堂的魔鬼</div>
+					<div class="singer one-text">邓紫棋</div>
+				</div>
+				<div class="control fr">
+					<div class="History"><img class="img-auto" src="./icons/Record.png" /></div>
+					<div class="switch audioplay"><img class="img-auto" src="./icons/play.png" /></div>
+					<div class="Next"><img class="img-auto" src="./icons/Next_one.png" ></div>
+				</div>
+				<!-- 播放器控件 -->
+				<audio id="audio"></audio>
+			</div>
+			<!-- 音乐播放器（小） end-->
+			
+			<!-- 播放记录 -->
+			<div class="Playlist">
+				<div class="Record">
+					<h3>播放记录</h3>
+					<div class="allTrash">清空列表</div>
+					<ul>
+						<li class="clearfix">
+							<div class="ct_left fl clearfix">
+								<div class="ct_img fl"><img class="img-auto" src="./images/bac.jpg" ></div>
+								<div class="information fl">
+									<div class="History-singer one-text">来自天堂的魔鬼</div>
+									<div class="name one-text">邓紫棋</div>
+								</div>
+							</div>
+							<div class="ct_right fr clearfix">
+								<div class="date fl">03:30</div>
+								<div class="Trash fr"><img class="img-auto" src="./icons/Trash.png" ></div>
+							</div>
+						</li>
+					
+						
+					</ul>
+				</div>
+				
+			</div>
+			<!-- 播放记录 end-->
+			
+			
+			<!-- 音乐播放器(大) -->
+			
+			<div class="maxPlayer">
+				<div class="Song-ba"></div>
+				<div class="Frosted"></div>
+				<!-- 手机任务栏预留空间 -->
+				<div class="Android_task"></div>
+				<div class="maxPlayer-top">
+					<div class="Return"><img class="img-auto" src="./icons/Return.png" ></div>
+					<div class="maxPlayer-song">
+						<div class="maxPlayer-song-name one-text">来自天庭的魔鬼</div>
+						<div class="maxPlayer-song-singer one-text">赵丽颖</div>
+					</div>
+				</div>
+				<div class="Lyric">
+					<div class="Lyriclise">
+						<!-- <p class="active">11111111111111111</p>
+						<p>11111111111111111</p>
+						<p>11111111111111111</p>
+						<p>11111111111111111</p>
+						<p>11111111111111111</p> -->
+					</div>
+				</div>
+				
+				<div class="maxcontrol">
+					<div class="axis">
+						<div class="Load"></div>
+						<div class="progress"></div>
+						<div class="slider activation"></div>
+					</div>
+					<div class="time">
+						<div class="time1">00:00</div>
+						<div>/</div>
+						<div class="time2">00:00</div>
+					</div>
+					
+					
+					<div class="desk">
+						<div class="download"><img class="img-auto" src="./icons/download.png" ></div>
+						<div class="Last_one"><img class="img-auto" src="./icons/Last_one.png" ></div>
+						<div class="audioplay"><img class="img-auto" src="./icons/play.png" ></div>
+						<div class="Next_one"><img class="img-auto" src="./icons/Next_one.png" ></div>
+						<div class="Pattern"><img class="img-auto" src="./icons/Random.png" ></div>
+					</div>
+					
+				</div>
+				
+			</div>
+			
+			<!-- 音乐播放器(大) end-->
+			
+		</div>
+		<!-- box end -->
+		<!-- jq -->
+		<script src="./js/jquery-3.4.1.js"></script>
+		<!-- 自适应 -->
+		<script src="./js/rem.js"></script>
+		<!-- 初始化默认属性 -->
+		<script src="./js/default.js"></script>
+		<!-- 封装常用方法 -->
+		<script src="./js/Append.js"></script>
+		<!-- 主页js -->
+		<script src="./js/index.js"></script>
+		<!-- 播放器 -->
+		<script src="./js/audio.js"></script>
+	</body>
+</html>

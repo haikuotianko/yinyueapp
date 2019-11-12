@@ -1,0 +1,67 @@
+
+body{
+  font-size: 0.16rem;
+  margin: 0 auto;
+  font-family: '宋体';
+}
+
+ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+input{
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+p{
+  margin: 0;
+}
+
+.fl{
+	float: left;
+}
+
+.fr{
+	float: right;
+}
+
+.clearfix:after{
+	content: '';
+	display: block;
+	clear: both;
+}
+
+
+.img-auto{
+  width: 100%;
+  display: block;
+}
+
+.two-text{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.one-text{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.Android_task{
+	position: sticky;
+	height: 24px;
+}
+
+.img-Load{
+	background: url(../icons/music.png) no-repeat center center;
+	background-size: cover;
+}
+
