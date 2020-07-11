@@ -3,8 +3,6 @@ $(function() {
 	// 播放器控件
 	var audio = $('#audio');
 
-	// 当前播放歌曲id
-	var audioId = null;
 
 	var audioplay = $('.audioplay');
 
@@ -21,7 +19,10 @@ $(function() {
 
 	// 小圆点--小滑块
 	var slider = $('.slider');
-
+	
+	// 当前播放歌曲id
+	var audioId = null;
+	
 	// 歌词
 	var Lyriclise = $('.Lyriclise');
 
@@ -39,15 +40,42 @@ $(function() {
 
 	// 音乐播放列表
 	var Music_play = Music_playlist;
-
+	
+	Initialization();
+	// 初始显示
+	function Initialization(initis){
+		if(Music_play[0] != undefined){
+			let obj = Music_play[0];
+			if(initis){
+				// 获取音乐
+				audioget(obj.id);
+				// 获取歌词
+				audioLyricsget(obj.id);
+			}
+			
+			// 播放器显示（小）
+			audioshow(obj);
+			// 播放器显示（大）
+			audioshowmax(obj);
+			
+		}
+	}
+	
+	// 播放暂停按钮2 触发按钮1事件
+	$('.audioplay-two').on('click',function(){
+		audioplay.trigger('click');
+	})
+	
 
 	// 播放暂停按钮
 	audioplay.on('click', function(e) {
 		e.stopPropagation();
-		if (!audioId) {
-			console.log('当前未选择歌曲，随机播放!');
-			Loading.show(transition);
+		if (Music_play[0] == undefined) {
+			console.log('当前播放列表没有歌曲，随机播放!');
+			Loading.show(transition * trtime);
 			return Recommended();
+		}else if(!audioId){
+			Initialization(true);
 		}
 
 		if ($(this).prop('name') != 1) {
@@ -55,17 +83,113 @@ $(function() {
 			audio[0].play();
 			// audio.trigger("click");//模拟执行audio的事件 
 		} else {
-			// 暂停
+			// 暂停pause();
 			audio[0].pause();
+			
 		}
 
 	})
-
+	
+	// 下一首按钮2 触发按钮1事件
+	$('.Next-fn-two').on('click',function(){
+		$('.Next-fn').trigger('click');
+	})
+	
+	// 下一首按钮
+	$('.Next-fn').on('click',function(e){
+		e.stopPropagation();
+		if(Music_play[0] == undefined || audioId == null){
+			
+			return audioplay.trigger('click');
+		}
+		let shu = 0;
+		let index = $('.Pattern').data('Patt');
+		if(index != '1' || index == undefined){
+			for(let i in Music_play){
+				// console.log(Music_play[i])
+				if(Music_play[i].id == audioId){
+					shu = ++i >= Music_play.length ? 0 : i;
+					break;
+				}
+			}
+		}else{
+			
+			shu = Math.floor(Math.random() * Music_play.length);
+			if(Music_play[shu].id == audioId && Music_play.length > 1){
+				console.log('随机到当前歌曲，启用递归');
+				return $(this).trigger('click');
+			}
+		}
+		
+		let obj = Music_play[shu];
+		// console.log(shu,obj)
+		// 获取音乐
+		audioget(obj.id);
+		// 获取歌词
+		audioLyricsget(obj.id);
+		// 播放器显示（小）
+		audioshow(obj);
+		// 播放器显示（大）
+		audioshowmax(obj);
+		
+		
+	})
+	
+	// 上一首按钮
+	$('.Last_one').on('click',function(){
+		if(Music_play[0] == undefined || audioId == null){
+			return audioplay.trigger('click');
+		}
+		
+		let shu = 0;
+		for(let i in Music_play){
+			// console.log(Music_play[i])
+			if(Music_play[i].id == audioId){
+				shu = --i < 0 ? Music_play.length - 1 : i
+				break;
+			}
+		}
+		let obj = Music_play[shu];
+		// console.log(shu,obj)
+		// 获取音乐
+		audioget(obj.id);
+		// 获取歌词
+		audioLyricsget(obj.id);
+		// 播放器显示（小）
+		audioshow(obj);
+		// 播放器显示（大）
+		audioshowmax(obj);
+		
+	})
+	
+	let imgarr = ['List_loop','Random','Single'];
+	let imgarrIs = 0;
+	$('.Pattern').on('click',function(){
+		imgarrIs++;
+		imgarrIs = imgarrIs >= imgarr.length ? 0 : imgarrIs;
+		$(this).find('img').prop('src','./icons/' + imgarr[imgarrIs] + '.png');
+		$(this).data('Patt',imgarrIs);
+	})	
+	
+	// 音频播放完成事件
+	audio.on('ended',function(){
+		let index = $('.Pattern').data('Patt');
+		if(index == '2'){
+			//重新加载
+			audio[0].load();
+			
+			//播放
+			audio[0].play();
+		}else{
+			$('.Next-fn').trigger('click');
+		}
+	})
+	
 	//音频播放事件 onplay
 	audio.on('play', function() {
 		audioplay.prop('name', 1);
 		audioplay.find('img').prop('src', './icons/suspend.png');
-
+		$('.audioplay-two').find('img').prop('src', './icons/suspend.png');
 		// animation-play-state: paused | running;
 		Songurl.css({
 			'animation-play-state': 'running',
@@ -80,6 +204,7 @@ $(function() {
 	audio.on('pause', function() {
 		audioplay.prop('name', 0);
 		audioplay.find('img').prop('src', './icons/play.png');
+		$('.audioplay-two').find('img').prop('src', './icons/play.png');
 		Songurl.css({
 			'animation-play-state': 'paused',
 		})
@@ -88,12 +213,12 @@ $(function() {
 
 	//音频可以播放时事件 oncanplay
 	audio.on('canplay', function() {
-		Loading.hide(transition);
+		Loading.hide(transition * trtime);
 		audio[0].play();
 		//获取音频总时长
 		duration = this.duration;
 		var time = addZero(duration / 60) + ':' + addZero(duration % 60);
-		console.log(duration)
+		// console.log(duration)
 		$('.time2').text(time);
 	})
 
@@ -108,19 +233,24 @@ $(function() {
 			var count = audio[0].currentTime;
 			var time = addZero(count / 60) + ':' + addZero(count % 60);
 
-
+			
+				
+			
 			// 获取已缓冲部分的 TimeRanges 对象
 			var timeRanges = audio[0].buffered;
-			// 获取以缓存的时间
-			var timeBuffered = timeRanges.end(timeRanges.length - 1);
-			// 获取缓存进度，值为0到1
-			var bufferPercent = timeBuffered / audio[0].duration;
-			// ...... 
-			// 之后将bufferPercent按照自己需要的方式进行处理即可
-			// 处理的时候要注意浮点数精度造成的误差。
+			if(timeRanges.length > 0){
+				// 获取以缓存的时间
+				var timeBuffered = timeRanges.end(timeRanges.length - 1);
+				// 获取缓存进度，值为0到1
+				var bufferPercent = timeBuffered / audio[0].duration;
+				// ...... 
+				// 之后将bufferPercent按照自己需要的方式进行处理即可
+				// 处理的时候要注意浮点数精度造成的误差。
+				
+				$('.Load').css('width', bufferPercent * $('.axis').width());
+			}
 			
-			$('.Load').css('width', bufferPercent * $('.axis').width());
-
+			
 			// 拦截判断
 			if (!but_music) {
 				return;
@@ -140,26 +270,41 @@ $(function() {
 			// 代理服务器 + 推荐新音乐
 			url: agent + New_music,
 			success: function(obj) {
-				let r = Math.floor(Math.random() * obj.result.length);
-				var ar = [];
-				var dt = obj.result[r].song.artists;
-				for (var j in dt) {
-					ar.push(dt[j].name);
-				}
-				console.log(obj)
 				
-				let shuju = {
-					id: obj.result[r].id,
-					name: obj.result[r].name,
-					imgurl: obj.result[r].song.album.picUrl,
-					Song: ar.join('/'),
-					date : timeset(obj.result[r].song.duration).dt,
+				for(let i in obj.result){
+					var ar = [];
+					var dt = obj.result[i].song.artists;
+					for (var j in dt) {
+						ar.push(dt[j].name);
+					}
+					Music_play.push({
+						id: obj.result[i].id,
+						name: obj.result[i].name,
+						imgurl: obj.result[i].song.album.picUrl,
+						Song: ar.join('/'),
+						date : timeset(obj.result[i].song.duration).dt,
+					})
 				}
+				//JSON.stringify(data);把对象转为字符串
+				localStorage.setItem('Music_playlis_storage', JSON.stringify(Music_play));
+				let r = Math.floor(Math.random() * Music_play.length);
+				let shuju = {
+					id: Music_play[r].id,
+					name: Music_play[r].name,
+					imgurl: Music_play[r].imgurl,
+					Song: Music_play[r].Song,
+					date : Music_play[r].date,
+				}
+				// 清空歌词列表
+				Lyriclise.html('');
 				audioget(shuju.id);
 				// 获取歌词
 				audioLyricsget(shuju.id);
 				audioshow(shuju);
 				audioshowmax(shuju);
+				
+				
+				
 			},
 			error: function(err) {
 				//请求失败
@@ -178,8 +323,11 @@ $(function() {
 				id: id,
 			},
 			success: function(obj) {
-				// console.log(obj)
+				console.log(obj)
 				// console.log(obj.data[0].url);
+				if(obj.data[0].url == null){
+					alert("获取歌曲音频失败,请更换其他歌曲!");
+				}
 				audioId = id;
 				audio.data('id', audioId);
 				$('#audio').prop('src', obj.data[0].url);
@@ -240,8 +388,8 @@ $(function() {
 				id: id,
 			},
 			success: function(obj) {
-				if (obj.lrc.lyric != undefined) {
-
+				if (obj.lrc && obj.lrc.lyric != undefined) {
+					
 					audioLyricsshow(obj.lrc.lyric);
 				}
 
@@ -278,7 +426,7 @@ $(function() {
 				i,
 			}
 
-			var ps = $('<p></p>');
+			var ps = $('<p data="' + second + ':' + tims + '"></p>');
 			ps.text(Lyrics);
 			if (i == 0) {
 				ps.addClass('active');
@@ -322,7 +470,7 @@ $(function() {
 				audioplay.trigger('click');
 				return;
 			}
-			Loading.show(transition);
+			Loading.show(transition * trtime);
 			// 获取音乐
 			audioget(data.id);
 			// 获取歌词
@@ -336,20 +484,23 @@ $(function() {
 		// 关闭窗口
 		if (!data.but) {
 			var iframe = $('#iframe');
-			iframe.animate({
-				left: data.left,
-				top: data.top,
-				width: data.width,
-				height: data.height,
-				opacity: data.opacity,
-				borderRadius: data.borderRadius,
-			}, transition, function() {
-				iframe.remove();
-				audio_this.animate({
-					opacity: 1
-				}, transition);
-				$("body").parent().css("overflow-y", "auto");
-			})
+			
+			(function($this){
+				 iframe.animate({
+					left: data.left,
+					top: data.top,
+					width: data.width,
+					height: data.height,
+					opacity: data.opacity,
+					borderRadius: data.borderRadius,
+				}, transition * trtime, function() {
+					iframe.remove();
+					$this.animate({
+						opacity: 1
+					}, transition * trtime);
+					$('body').css("overflow-y", "auto");
+				})
+			})(audio_this)
 
 		}
 	})
@@ -357,7 +508,7 @@ $(function() {
 	$('.minPlayer').on('click', function() {
 		maxPlayer.animate({
 			top: 0,
-		}, transition)
+		}, transition * trtime)
 		$('body').css("overflow-y", "hidden");
 	})
 
@@ -365,7 +516,7 @@ $(function() {
 
 		maxPlayer.animate({
 			top: '100%',
-		}, transition)
+		}, transition * trtime)
 		$('body').css("overflow-y", "auto");
 	})
 
@@ -399,7 +550,7 @@ $(function() {
 
 	// touchstart
 	$('.axis').on('touchstart', function(e) {
-		console.log('鼠标按下');
+		// console.log('鼠标按下');
 		but_music = false;
 		var _this = $(this);
 		var width = _this.width() - slider.outerWidth();
@@ -426,7 +577,7 @@ $(function() {
 		$(document).on('touchend', function() {
 			$('.axis').off('touchmove');
 			$(document).off('touchend');
-			console.log('放开鼠标');
+			// console.log('放开鼠标');
 			var Calculation = slider.position().left / ($('.axis').width() - slider.outerWidth()) * duration;
 			// console.log(Calculation);
 			audio[0].currentTime = Calculation;
@@ -452,7 +603,7 @@ $(function() {
 			display: 'block',
 		}).find('.Record').animate({
 			height: '70%'
-		}, transition)
+		}, transition * trtime)
 		$('body').css("overflow-y", "hidden");
 		Playlistshow();
 	})
@@ -486,6 +637,7 @@ $(function() {
 			lis.on('click',function(){
 				
 				let obj = Music_play[$(this).index()];
+				$(this).addClass('active').siblings().removeClass('active');
 				if (audioId == obj.id) {
 					// 调用暂停/播放按钮事件
 					audioplay.trigger('click');
@@ -501,18 +653,42 @@ $(function() {
 				
 				
 			})
+			lis.find('.Trash').on('click',function(e){
+				e.stopPropagation();
+				let _this = $(this).parents('li');
+				let index = _this.index();
+				Music_play.splice(index,1);
+				_this.remove();
+				// console.log(Music_play);
+				//JSON.stringify(data);把对象转为字符串
+				localStorage.setItem('Music_playlis_storage', JSON.stringify(Music_play));
+			})
 		}
+		
 		
 		
 
 	}
-
+	
+	// 清空播放列表按钮
+	$('.allTrash').on('click',function(e){
+		e.stopPropagation();
+		if(confirm('你是否确认清空播放列表!')){
+			console.log('清空列表');
+			Music_play = [];
+			$('.Record>ul').html('');
+			//JSON.stringify(data);把对象转为字符串
+			localStorage.setItem('Music_playlis_storage', JSON.stringify(Music_play));
+		}
+		
+	})
+	
 	// 隐藏播放列表
 	$('.Playlist').on('click', function() {
 		let _this = $(this);
 		_this.find('.Record').animate({
 			height: '0'
-		}, transition, function() {
+		}, transition * trtime, function() {
 			_this.css({
 				display: 'none',
 			})
@@ -524,5 +700,134 @@ $(function() {
 	$('.Record').on('click', function(e) {
 		e.stopPropagation();
 	})
+	
+	
+	// 搜索框
+	let seek = $('.Seek');
+	
+	seek.on('focus',function(){
+		if(seek.val().trim() != ''){
+			$('.search-result').slideDown(transition * trtime);
+		}
+	})
+	
+	
+	seek.on('blur',function(){
+		
+		$('.search-result').slideUp(transition * trtime + 100);
+		
+	})
+	
+	// 搜索框 -- 节流 -- 1000毫秒
+	antiShake(seek,'input',function(){
+		
+		if(seek.val().trim() != ''){
+			seekget(seek.val())
+		}else{
+			$('.search-result').slideUp(transition * trtime);
+		}
+		
+		
+	},1000)
+	
+	function seekget(valtext){
+		$.ajax({
+			type: 'GET',
+			url: agent + search_sousuo,
+			data: {
+				keywords: valtext,
+			},
+			success: function(obj) {
+				// console.log(obj.result.songs);
+				seekshow(obj.result.songs);
+				$('.search-result').slideDown(transition * trtime);
+			},
+			error: function(err) {
+				//请求失败
+				console.log('err ==> ', err);
+			}
+		})
+	}
+	
+	function seekshow(data){
+		let ul = $('.search-result>ul');
+		ul.html('');
+		
+		for(let i in data){
+			let lis = $('<li class="clearfix"></li>');
+			lis.data('id',data[i].id);
+			let geshou = "";
+			for(let j = 0; j < data[i].artists.length; j++){
+				if(j == 0){
+					geshou += data[i].artists[j].name;
+				}else{
+					geshou += '/' + data[i].artists[j].name;
+				}
+			}
+			
+			let str = `
+				<div class="result_ge fl one-text">${data[i].name}</div>
+				<div class="result_name fl one-text">${geshou}</div>
+				`
+			lis.html(str);
+			ul.append(lis);
+			
+			lis.on('click',function(e){
+				// console.log(this)
+				e.stopPropagation();
+				audioId = $(this).data('id');
+				// 获取歌曲详情
+				audioimgget(audioId);
+				
+			})
+		}
+	}
+	
+	
+	function audioimgget(ids){
+		$.ajax({
+			type: 'GET',
+			// 代理服务器 + 根据id获取歌曲详情
+			url: agent + Song_details,
+			data: {
+				ids,
+			},
+			success: function(obj) {
+				// console.log(obj.songs[0])
+				// console.log(obj.data[0].url);
+				obj = obj.songs[0];
+				let geshou = "";
+				for(let j = 0; j < obj.ar.length; j++){
+					if(j == 0){
+						geshou += obj.ar[j].name;
+					}else{
+						geshou += '/' + obj.ar[j].name;
+					}
+				}
+				
+				let data = {
+					id: obj.id,
+					name: obj.name,
+					imgurl: obj.al.picUrl,
+					Song: geshou,
+					date : timeset(obj.dt).dt,
+				}
+				// console.log(data);
+				// 获取音乐
+				audioget(data.id);
+				// 获取歌词
+				audioLyricsget(data.id);
+				// 播放器显示（小）
+				audioshow(data);
+				// 播放器显示（大）
+				audioshowmax(data);
+				
+			},
+			error: function(err) {
+				//请求失败
+				console.log('err ==> ', err);
+			}
+		})
+	}
 
 })

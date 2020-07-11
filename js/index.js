@@ -32,20 +32,22 @@ $(function(){
 	
 	// 推荐歌单请求
 	function songAheetget(){
-		
-		$.ajax({
-			type: 'GET',
-			// 代理服务器 + 推荐歌单
-			url: agent + Recommend_songs,
-			success: function(result){
-				console.log(result);
-				songAheetshow(result.result);
-			},
-			error: function (err) {
-			  //请求失败
-			  console.log('err ==> ', err);
-			}
+		luckyit.json(agent + Recommend_songs).then(res => {
+			songAheetshow(res.result);
 		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	// 代理服务器 + 推荐歌单
+		// 	url: agent + Recommend_songs,
+		// 	success: function(result){
+		// 		// console.log(result);
+		// 		songAheetshow(result.result);
+		// 	},
+		// 	error: function (err) {
+		// 	  //请求失败
+		// 	  console.log('err ==> ', err);
+		// 	}
+		// })
 	}
 	
 	// 显示推荐歌单内容
@@ -95,7 +97,7 @@ $(function(){
 			audio_this = _this;
 			_this.animate({
 				opacity:0,
-			},transition)
+			},transition * trtime)
 		})
 		
 	}
@@ -103,20 +105,22 @@ $(function(){
 	
 	// 专辑数据请求
 	function Albumget(){
-		
-		$.ajax({
-			type: 'GET',
-			// 代理服务器 + 最新专辑
-			url: agent + Latest_album,
-			success: function(result){
-				// console.log(result);
-				Albumshow(result.albums);
-			},
-			error: function (err) {
-			  //请求失败
-			  console.log('err ==> ', err);
-			}
+		luckyit.json('ssss').then(res => {
+			Albumshow(res.albums);
 		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	// 代理服务器 + 最新专辑
+		// 	url: agent + Latest_album,
+		// 	success: function(result){
+		// 		// console.log(result);
+		// 		Albumshow(result.albums);
+		// 	},
+		// 	error: function (err) {
+		// 	  //请求失败
+		// 	  console.log('err ==> ', err);
+		// 	}
+		// })
 	}
 	
 	// 遍历最新专辑
@@ -142,7 +146,7 @@ $(function(){
 				</div>`;
 			li.data('id',obj[i].id);
 			li.html(str);
-			ul.append(li);
+			ul.prepend(li);
 		}
 		// li点击事件
 		ul.on('click','li',function(){
@@ -163,7 +167,7 @@ $(function(){
 			audio_this = _this;
 			_this.animate({
 				opacity:0,
-			},transition)
+			},transition * trtime)
 		})
 		
 	}
@@ -173,7 +177,8 @@ $(function(){
 		
 		var iframe = $('<iframe id="iframe" frameborder="0" scrolling="yes" seamless="seamless" ></iframe>');
 		iframe.prop('src','./wed/' + obj.pa + '.html?' + JSON.stringify(obj));
-		$('body').prepend(iframe).parent().css("overflow-y","hidden");
+		$('body').prepend(iframe);
+		$('body').css("overflow-y","hidden");
 		iframe.css({
 			position : 'fixed',
 			zIndex : 100,
@@ -190,7 +195,7 @@ $(function(){
 			height : '100%',
 			opacity : '1',
 			'border-radius' : '0rem',
-		},transition)
+		},transition * trtime)
 	}
 	
 	function navstyle(){
@@ -204,18 +209,18 @@ $(function(){
 				if(navIsbut){
 					nav.animate({
 						width : '100%',
-					},transition).find('.nav_img').animate({
+					},transition * trtime).find('.nav_img').animate({
 						width : '40%',
-					},transition)
+					},transition * trtime)
 					navIsbut = false;
 				}
 			}else{
 				if(!navIsbut){
 					nav.animate({
 						width : '90%'
-					},transition).find('.nav_img').animate({
+					},transition * trtime).find('.nav_img').animate({
 						width : '50%',
-					},transition)
+					},transition * trtime)
 					navIsbut = true;
 				}
 			}
@@ -223,5 +228,42 @@ $(function(){
 		},200)
 	}
 	
+	
+	// 个人中心
+	$('.Personal').on('click',function(){
+		$('.Pl_wicket').css({
+			display : 'block',
+		})
+		$('.Set_up').stop().animate({
+			left : '0',
+		},transition * trtime)
+		$('body').css("overflow-y", "hidden");
+		$('.set_time>input[name="'+trtime+'"]').addClass('active').siblings().removeClass('active');
+	})
+	
+	$('.Pl_wicket').on('click',function(){
+		
+		$('.Set_up').stop().animate({
+			left : '-50%',
+		},transition * trtime,function(){
+			$('.Pl_wicket').css({
+				display : 'none',
+			})
+		})
+		$('body').css("overflow-y", "auto");
+	})
+	
+	$('.Set_up').on('click',function(e){
+		e.stopPropagation();
+		
+	})
+	
+	$('.set_time>input').on('click',function(){
+		let _this = $(this);
+		trtime = _this.prop('name');
+		_this.addClass('active').siblings().removeClass('active');
+		//JSON.stringify(data);把对象转为字符串
+		localStorage.setItem('Transition_time', JSON.stringify(trtime));
+	})
 	
 })
