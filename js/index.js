@@ -105,7 +105,7 @@ $(function(){
 	
 	// 专辑数据请求
 	function Albumget(){
-		luckyit.json('ssss').then(res => {
+		luckyit.json(agent + Latest_album).then(res => {
 			Albumshow(res.albums);
 		})
 		// $.ajax({

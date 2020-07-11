@@ -265,79 +265,125 @@ $(function() {
 
 	// 播放为空时，获取推荐音乐
 	function Recommended() {
-		$.ajax({
-			type: 'GET',
-			// 代理服务器 + 推荐新音乐
-			url: agent + New_music,
-			success: function(obj) {
-				
-				for(let i in obj.result){
-					var ar = [];
-					var dt = obj.result[i].song.artists;
-					for (var j in dt) {
-						ar.push(dt[j].name);
-					}
-					Music_play.push({
-						id: obj.result[i].id,
-						name: obj.result[i].name,
-						imgurl: obj.result[i].song.album.picUrl,
-						Song: ar.join('/'),
-						date : timeset(obj.result[i].song.duration).dt,
-					})
+		luckyit.json(agent + New_music).then(obj => {
+			for(let i in obj.result){
+				var ar = [];
+				var dt = obj.result[i].song.artists;
+				for (var j in dt) {
+					ar.push(dt[j].name);
 				}
-				//JSON.stringify(data);把对象转为字符串
-				localStorage.setItem('Music_playlis_storage', JSON.stringify(Music_play));
-				let r = Math.floor(Math.random() * Music_play.length);
-				let shuju = {
-					id: Music_play[r].id,
-					name: Music_play[r].name,
-					imgurl: Music_play[r].imgurl,
-					Song: Music_play[r].Song,
-					date : Music_play[r].date,
-				}
-				// 清空歌词列表
-				Lyriclise.html('');
-				audioget(shuju.id);
-				// 获取歌词
-				audioLyricsget(shuju.id);
-				audioshow(shuju);
-				audioshowmax(shuju);
-				
-				
-				
-			},
-			error: function(err) {
-				//请求失败
-				console.log('err ==> ', err);
+				Music_play.push({
+					id: obj.result[i].id,
+					name: obj.result[i].name,
+					imgurl: obj.result[i].song.album.picUrl,
+					Song: ar.join('/'),
+					date : timeset(obj.result[i].song.duration).dt,
+				})
 			}
+			//JSON.stringify(data);把对象转为字符串
+			localStorage.setItem('Music_playlis_storage', JSON.stringify(Music_play));
+			let r = Math.floor(Math.random() * Music_play.length);
+			let shuju = {
+				id: Music_play[r].id,
+				name: Music_play[r].name,
+				imgurl: Music_play[r].imgurl,
+				Song: Music_play[r].Song,
+				date : Music_play[r].date,
+			}
+			// 清空歌词列表
+			Lyriclise.html('');
+			audioget(shuju.id);
+			// 获取歌词
+			audioLyricsget(shuju.id);
+			audioshow(shuju);
+			audioshowmax(shuju);
+			
+			
 		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	// 代理服务器 + 推荐新音乐
+		// 	url: agent + New_music,
+		// 	success: function(obj) {
+				
+		// 		for(let i in obj.result){
+		// 			var ar = [];
+		// 			var dt = obj.result[i].song.artists;
+		// 			for (var j in dt) {
+		// 				ar.push(dt[j].name);
+		// 			}
+		// 			Music_play.push({
+		// 				id: obj.result[i].id,
+		// 				name: obj.result[i].name,
+		// 				imgurl: obj.result[i].song.album.picUrl,
+		// 				Song: ar.join('/'),
+		// 				date : timeset(obj.result[i].song.duration).dt,
+		// 			})
+		// 		}
+		// 		//JSON.stringify(data);把对象转为字符串
+		// 		localStorage.setItem('Music_playlis_storage', JSON.stringify(Music_play));
+		// 		let r = Math.floor(Math.random() * Music_play.length);
+		// 		let shuju = {
+		// 			id: Music_play[r].id,
+		// 			name: Music_play[r].name,
+		// 			imgurl: Music_play[r].imgurl,
+		// 			Song: Music_play[r].Song,
+		// 			date : Music_play[r].date,
+		// 		}
+		// 		// 清空歌词列表
+		// 		Lyriclise.html('');
+		// 		audioget(shuju.id);
+		// 		// 获取歌词
+		// 		audioLyricsget(shuju.id);
+		// 		audioshow(shuju);
+		// 		audioshowmax(shuju);
+				
+				
+				
+		// 	},
+		// 	error: function(err) {
+		// 		//请求失败
+		// 		console.log('err ==> ', err);
+		// 	}
+		// })
 	}
 
 	// 根据歌曲的id获取音频
 	function audioget(id) {
-		$.ajax({
-			type: 'GET',
-			// 代理服务器 + 根据歌曲的id获取音频
-			url: agent + Get_audio_url,
-			data: {
-				id: id,
-			},
-			success: function(obj) {
-				console.log(obj)
-				// console.log(obj.data[0].url);
-				if(obj.data[0].url == null){
-					alert("获取歌曲音频失败,请更换其他歌曲!");
-				}
-				audioId = id;
-				audio.data('id', audioId);
-				$('#audio').prop('src', obj.data[0].url);
-				audioplay.find('img').prop('src', './icons/suspend.png');
-			},
-			error: function(err) {
-				//请求失败
-				console.log('err ==> ', err);
+		luckyit.json(agent + Get_audio_url,{id}).then(obj => {
+			console.log(obj)
+			// console.log(obj.data[0].url);
+			if(obj.data[0].url == null){
+				alert("获取歌曲音频失败,请更换其他歌曲!");
 			}
+			audioId = id;
+			audio.data('id', audioId);
+			$('#audio').prop('src', obj.data[0].url);
+			audioplay.find('img').prop('src', './icons/suspend.png');
 		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	// 代理服务器 + 根据歌曲的id获取音频
+		// 	url: agent + Get_audio_url,
+		// 	data: {
+		// 		id: id,
+		// 	},
+		// 	success: function(obj) {
+		// 		console.log(obj)
+		// 		// console.log(obj.data[0].url);
+		// 		if(obj.data[0].url == null){
+		// 			alert("获取歌曲音频失败,请更换其他歌曲!");
+		// 		}
+		// 		audioId = id;
+		// 		audio.data('id', audioId);
+		// 		$('#audio').prop('src', obj.data[0].url);
+		// 		audioplay.find('img').prop('src', './icons/suspend.png');
+		// 	},
+		// 	error: function(err) {
+		// 		//请求失败
+		// 		console.log('err ==> ', err);
+		// 	}
+		// })
 	}
 
 
@@ -380,25 +426,31 @@ $(function() {
 
 	// 根据歌曲的id获取歌词
 	function audioLyricsget(id) {
-		$.ajax({
-			type: 'GET',
-			// 代理服务器 + 根据歌曲的id获取歌词
-			url: agent + Music_Lyrics,
-			data: {
-				id: id,
-			},
-			success: function(obj) {
-				if (obj.lrc && obj.lrc.lyric != undefined) {
-					
-					audioLyricsshow(obj.lrc.lyric);
-				}
-
-			},
-			error: function(err) {
-				//请求失败
-				console.log('err ==> ', err);
+		luckyit.json(agent + Music_Lyrics,{id}).then(obj => {
+			if (obj.lrc && obj.lrc.lyric != undefined) {
+				
+				audioLyricsshow(obj.lrc.lyric);
 			}
 		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	// 代理服务器 + 根据歌曲的id获取歌词
+		// 	url: agent + Music_Lyrics,
+		// 	data: {
+		// 		id: id,
+		// 	},
+		// 	success: function(obj) {
+		// 		if (obj.lrc && obj.lrc.lyric != undefined) {
+					
+		// 			audioLyricsshow(obj.lrc.lyric);
+		// 		}
+
+		// 	},
+		// 	error: function(err) {
+		// 		//请求失败
+		// 		console.log('err ==> ', err);
+		// 	}
+		// })
 	}
 
 	// 处理歌词
@@ -731,22 +783,27 @@ $(function() {
 	},1000)
 	
 	function seekget(valtext){
-		$.ajax({
-			type: 'GET',
-			url: agent + search_sousuo,
-			data: {
-				keywords: valtext,
-			},
-			success: function(obj) {
-				// console.log(obj.result.songs);
-				seekshow(obj.result.songs);
-				$('.search-result').slideDown(transition * trtime);
-			},
-			error: function(err) {
-				//请求失败
-				console.log('err ==> ', err);
-			}
+		luckyit.json(agent + search_sousuo, {keywords: valtext}).then(obj => {
+			// console.log(obj.result.songs);
+			seekshow(obj.result.songs);
+			$('.search-result').slideDown(transition * trtime);
 		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	url: agent + search_sousuo,
+		// 	data: {
+		// 		keywords: valtext,
+		// 	},
+		// 	success: function(obj) {
+		// 		// console.log(obj.result.songs);
+		// 		seekshow(obj.result.songs);
+		// 		$('.search-result').slideDown(transition * trtime);
+		// 	},
+		// 	error: function(err) {
+		// 		//请求失败
+		// 		console.log('err ==> ', err);
+		// 	}
+		// })
 	}
 	
 	function seekshow(data){
@@ -785,49 +842,78 @@ $(function() {
 	
 	
 	function audioimgget(ids){
-		$.ajax({
-			type: 'GET',
-			// 代理服务器 + 根据id获取歌曲详情
-			url: agent + Song_details,
-			data: {
-				ids,
-			},
-			success: function(obj) {
-				// console.log(obj.songs[0])
-				// console.log(obj.data[0].url);
-				obj = obj.songs[0];
-				let geshou = "";
-				for(let j = 0; j < obj.ar.length; j++){
-					if(j == 0){
-						geshou += obj.ar[j].name;
-					}else{
-						geshou += '/' + obj.ar[j].name;
-					}
+		luckyit.json(agent + Song_details, {ids}).then(obj => {
+			obj = obj.songs[0];
+			let geshou = "";
+			for(let j = 0; j < obj.ar.length; j++){
+				if(j == 0){
+					geshou += obj.ar[j].name;
+				}else{
+					geshou += '/' + obj.ar[j].name;
 				}
-				
-				let data = {
-					id: obj.id,
-					name: obj.name,
-					imgurl: obj.al.picUrl,
-					Song: geshou,
-					date : timeset(obj.dt).dt,
-				}
-				// console.log(data);
-				// 获取音乐
-				audioget(data.id);
-				// 获取歌词
-				audioLyricsget(data.id);
-				// 播放器显示（小）
-				audioshow(data);
-				// 播放器显示（大）
-				audioshowmax(data);
-				
-			},
-			error: function(err) {
-				//请求失败
-				console.log('err ==> ', err);
 			}
+			
+			let data = {
+				id: obj.id,
+				name: obj.name,
+				imgurl: obj.al.picUrl,
+				Song: geshou,
+				date : timeset(obj.dt).dt,
+			}
+			// console.log(data);
+			// 获取音乐
+			audioget(data.id);
+			// 获取歌词
+			audioLyricsget(data.id);
+			// 播放器显示（小）
+			audioshow(data);
+			// 播放器显示（大）
+			audioshowmax(data);
+			
 		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	// 代理服务器 + 根据id获取歌曲详情
+		// 	url: agent + Song_details,
+		// 	data: {
+		// 		ids,
+		// 	},
+		// 	success: function(obj) {
+		// 		// console.log(obj.songs[0])
+		// 		// console.log(obj.data[0].url);
+		// 		obj = obj.songs[0];
+		// 		let geshou = "";
+		// 		for(let j = 0; j < obj.ar.length; j++){
+		// 			if(j == 0){
+		// 				geshou += obj.ar[j].name;
+		// 			}else{
+		// 				geshou += '/' + obj.ar[j].name;
+		// 			}
+		// 		}
+				
+		// 		let data = {
+		// 			id: obj.id,
+		// 			name: obj.name,
+		// 			imgurl: obj.al.picUrl,
+		// 			Song: geshou,
+		// 			date : timeset(obj.dt).dt,
+		// 		}
+		// 		// console.log(data);
+		// 		// 获取音乐
+		// 		audioget(data.id);
+		// 		// 获取歌词
+		// 		audioLyricsget(data.id);
+		// 		// 播放器显示（小）
+		// 		audioshow(data);
+		// 		// 播放器显示（大）
+		// 		audioshowmax(data);
+				
+		// 	},
+		// 	error: function(err) {
+		// 		//请求失败
+		// 		console.log('err ==> ', err);
+		// 	}
+		// })
 	}
 
 })
