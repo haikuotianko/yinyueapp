@@ -16,17 +16,43 @@
 		<div class="box">
 			<!-- 手机任务栏预留空间 -->
 			<div class="Android_task"></div>
+			<!-- 设置菜单 -->
+			<div class="Pl_wicket">
+				<div class="Set_up">
+					<h3>设置</h3>
+					<ul>
+						<li>
+							<div class="set_time">
+								<h5>动画过渡时间</h5>
+								<input type="button" name="0" value="x0" />
+								<input class="active" type="button" name="1" value="x1" />
+								<input type="button" name="2" value="x2" />
+								<input type="button" name="5" value="x5" />
+							</div>
+						</li>
+						<li>
+							<h5>没有更多了...</h5>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="search-result">
+				<ul>
+				</ul>
+			</div>
 			<!-- 头部 -->
 			<header class="clearfix head">
 				<!-- 个人中心 -->
 				<div class="Personal fl "><img class="img-auto" src="icons/personal.png" /></div>
+				
 				<!-- 搜索框 -->
 				<div class="search fl">
 					<div class="Magnifier clearfix">
 						<i><img class="img-auto" src="icons/Magnifier.png" ></i>
-						<span>搜索歌名或歌手</span>
+						<span></span>
 					</div>
-					<input class="Seek" type="text" name="" value="" />
+					<input class="Seek" placeholder="搜索歌名或歌手" type="text" name="" value="" />
 				</div>
 			</header>
 			<!-- 头部 end-->
@@ -123,7 +149,7 @@
 				<div class="control fr">
 					<div class="History"><img class="img-auto" src="./icons/Record.png" /></div>
 					<div class="switch audioplay"><img class="img-auto" src="./icons/play.png" /></div>
-					<div class="Next"><img class="img-auto" src="./icons/Next_one.png" ></div>
+					<div class="Next Next-fn"><img class="img-auto" src="./icons/Next_one.png" ></div>
 				</div>
 				<!-- 播放器控件 -->
 				<audio id="audio"></audio>
@@ -133,10 +159,10 @@
 			<!-- 播放记录 -->
 			<div class="Playlist">
 				<div class="Record">
-					<h3>播放记录</h3>
+					<h3>播放列表</h3>
 					<div class="allTrash">清空列表</div>
 					<ul>
-						<li class="clearfix">
+						<!-- <li class="clearfix">
 							<div class="ct_left fl clearfix">
 								<div class="ct_img fl"><img class="img-auto" src="./images/bac.jpg" ></div>
 								<div class="information fl">
@@ -148,7 +174,7 @@
 								<div class="date fl">03:30</div>
 								<div class="Trash fr"><img class="img-auto" src="./icons/Trash.png" ></div>
 							</div>
-						</li>
+						</li> -->
 					
 						
 					</ul>
@@ -198,9 +224,9 @@
 					<div class="desk">
 						<div class="download"><img class="img-auto" src="./icons/download.png" ></div>
 						<div class="Last_one"><img class="img-auto" src="./icons/Last_one.png" ></div>
-						<div class="audioplay"><img class="img-auto" src="./icons/play.png" ></div>
-						<div class="Next_one"><img class="img-auto" src="./icons/Next_one.png" ></div>
-						<div class="Pattern"><img class="img-auto" src="./icons/Random.png" ></div>
+						<div class="audioplay-two"><img class="img-auto" src="./icons/play.png" ></div>
+						<div class="Next_one Next-fn-two"><img class="img-auto" src="./icons/Next_one.png" ></div>
+						<div class="Pattern"><img class="img-auto" src="./icons/List_loop.png" ></div>
 					</div>
 					
 				</div>
@@ -217,6 +243,8 @@
 		<script src="./js/rem.js"></script>
 		<!-- 初始化默认属性 -->
 		<script src="./js/default.js"></script>
+		<!-- 跨域请求 -->
+		<script src="./js/luckyit.js"></script>
 		<!-- 封装常用方法 -->
 		<script src="./js/Append.js"></script>
 		<!-- 主页js -->
