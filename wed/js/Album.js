@@ -38,32 +38,41 @@ $(function() {
 	
 	// 获取数据
 	function dataget(obj) {
-
-		$.ajax({
-			type: 'GET',
-			// 代理服务器 + 根据id获取歌单详情
-			url: agent + Song_list_details,
-			data: {
-				id: obj.id,
-			},
-			success: function(data) {
+		luckyit.json(agent + Song_list_details, {id: obj.id}).then(data => {
+			$('.column_text>marquee').text(data.playlist.name);
+			shuju = data.playlist.tracks
+			Loading.animate({
+				opacity: 0
+			}, transition * 2, function() {
+				datashow(shuju);
+				Loading.remove();
+			})
+		})
+		// $.ajax({
+		// 	type: 'GET',
+		// 	// 代理服务器 + 根据id获取歌单详情
+		// 	url: agent + Song_list_details,
+		// 	data: {
+		// 		id: obj.id,
+		// 	},
+		// 	success: function(data) {
 				
 
-				$('.column_text>marquee').text(data.playlist.name);
-				shuju = data.playlist.tracks
-				Loading.animate({
-					opacity: 0
-				}, transition * 2, function() {
-					datashow(shuju);
-					Loading.remove();
-				})
+		// 		$('.column_text>marquee').text(data.playlist.name);
+		// 		shuju = data.playlist.tracks
+		// 		Loading.animate({
+		// 			opacity: 0
+		// 		}, transition * 2, function() {
+		// 			datashow(shuju);
+		// 			Loading.remove();
+		// 		})
 
-			},
-			error: function(err) {
-				//请求失败
-				console.log('err ==> ', err);
-			}
-		})
+		// 	},
+		// 	error: function(err) {
+		// 		//请求失败
+		// 		console.log('err ==> ', err);
+		// 	}
+		// })
 
 	}
 
